@@ -1,19 +1,20 @@
 package org.qosmiof2.node;
 
 import org.powerbot.script.lang.Filter;
+import org.powerbot.script.lang.ItemQuery;
 import org.powerbot.script.methods.MethodContext;
 import org.powerbot.script.methods.Bank.Amount;
 import org.powerbot.script.util.Timer;
 import org.powerbot.script.wrappers.Item;
 import org.powerbot.script.wrappers.Npc;
 import org.powerbot.script.wrappers.Tile;
-import org.qosmiof2.enums.Food;
+import org.qosmiof2.gui.Food;
 
 import com.qosmiof2.script.node.Mine;
 
 public class Bank extends Node {
 
-	public static boolean bank = false;
+	private ItemQuery<Item> item;
 
 	public Bank(MethodContext ctx) {
 		super(ctx);
@@ -22,16 +23,15 @@ public class Bank extends Node {
 
 	@Override
 	public boolean activate() {
-		return bank;
+		return ctx.backpack.select().name(Food.foodName).first().isEmpty();
 	}
 
 	@Override
 	public void execute() {
-		for (Npc npc : ctx.npcs.select().name("Banker").nearest().first()) {
-			if (ctx.movement.getDistance(npc.getLocation(), ctx.players.local()
+			if (ctx.movement.getDistance(ctx.bank.getNearest().getLocation(), ctx.players.local()
 					.getLocation()) >= 10) {
-				ctx.movement.stepTowards(new Tile((npc.getLocation().x + 5),
-						(npc.getLocation().y + 1), 0));
+				ctx.movement.stepTowards(new Tile((ctx.bank.getNearest().getLocation().getLocation().x + 5),
+						(ctx.bank.getNearest().getLocation().y + 1), 0));
 				Timer walking = new Timer(120000);
 				while (walking.isRunning() && ctx.players.local().isInMotion()) {
 					sleep(500);
@@ -39,7 +39,7 @@ public class Bank extends Node {
 			}
 
 			for (int i = 0; i < 100 && !ctx.bank.isOpen(); i++) {
-				npc.interact("Bank");
+				ctx.bank.open();
 				sleep(1000);
 			}
 			if (ctx.bank.isOpen()) {
@@ -58,10 +58,7 @@ public class Bank extends Node {
 				}
 
 			}
-			bank = false;
 
 		}
 
 	}
-
-}

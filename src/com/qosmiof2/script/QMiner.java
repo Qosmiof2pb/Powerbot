@@ -5,9 +5,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 import org.powerbot.event.MessageEvent;
@@ -37,11 +41,11 @@ public class QMiner extends PollingScript implements PaintListener, MessageListe
 
 	private final ArrayList<Node> nodes = new ArrayList<>();
 
-	public QMiner() {
-		Collections.addAll(nodes, new Drop(ctx), new Mine(ctx), new Bank(ctx));
+	public QMiner(){
+		Collections.addAll(nodes, new Mine(ctx), new Drop(ctx), new Bank(ctx));
 		Ores.GUI.showGUI();
 	}
-
+	
 	@Override
 	public void start() {
 		if (ctx.game.isLoggedIn()) {
@@ -72,25 +76,30 @@ public class QMiner extends PollingScript implements PaintListener, MessageListe
 
 	private int x, y;
 	
+	Image paint = getImage("http://s21.postimg.org/4pnqn1jyf/Paint.png"); 
+
+	//Method to import
+	private Image getImage(String url) {
+	         try { return ImageIO.read(new URL(url)); } 
+	         catch(IOException e) { return null; }
+	       }
+	
 	@Override
 	public void repaint(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		xpGained = startXP - (ctx.skills.getExperience(Skills.MINING));
+		xpGained = (ctx.skills.getExperience(Skills.MINING) - startXP);
 		xpPerHour = (int) (((xpGained * 3600000D) / (System.currentTimeMillis() - startTime)));
-		g.setColor(transGreen);
-		g.fillRect(10, 232, 186, 263);
-		g.setColor(Color.black);
-		g.setStroke(stroke1);
+		g.drawImage(paint, 100, 400, null);
 		g.drawRect(10, 232, 186, 263);
 		g.setFont(arial);
-		g.drawString("XP gained: " + xpGained, 15, 250);
-		g.drawString("XP p/h: " + xpPerHour, 15, 280);
-		g.drawString("Mining lvl: " + (ctx.skills.getRealLevel(Skills.MINING) + "(" + (ctx.skills.getRealLevel(Skills.MINING) - startMiningLvl)+ ")"), 15, 310);
-		g.drawString("Ores mined: " + oresMined, 15, 340);
-		g.drawString("Status: ", 15, 370);
-		g.drawString("" + runTime.toElapsedString(), 15, 400);
+		g.drawString("" + xpGained, 490, 512);
+		g.drawString("" + xpPerHour, 490, 555);
+		g.drawString("" + (ctx.skills.getRealLevel(Skills.MINING) + "(" + (ctx.skills.getRealLevel(Skills.MINING) - startMiningLvl)+ ")"), 15, 310);
+		g.drawString("" + oresMined, 200, 512);
+		g.drawString("" + runTime.toElapsedString(), 320, 589);
 		x = ctx.mouse.getLocation().x;
 		y = ctx.mouse.getLocation().y;
+		g.setColor(Color.white);
 		g.drawLine(x + 5, y + 5, x - 5, y - 5);
 		g.drawLine(x - 5, y + 5, x + 5, y - 5);
 

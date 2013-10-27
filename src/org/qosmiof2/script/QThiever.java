@@ -12,7 +12,7 @@ import org.powerbot.script.PollingScript;
 import org.powerbot.script.methods.Skills;
 import org.powerbot.script.util.Random;
 import org.powerbot.script.util.Timer;
-import org.qosmiof2.enums.Food;
+import org.qosmiof2.gui.Food;
 import org.qosmiof2.node.Bank;
 import org.qosmiof2.node.Eat;
 import org.qosmiof2.node.PickPocket;

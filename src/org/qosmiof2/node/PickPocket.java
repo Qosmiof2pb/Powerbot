@@ -59,7 +59,7 @@ public class PickPocket extends Node {
 							sleep(50);
 						}
 
-						Timer wait = new Timer(10000);
+						Timer wait = new Timer(5000);
 						while (wait.isRunning() && ctx.players.local().getAnimation() != -1
 								&& pocket.isValid()) {
 							sleep(50);

@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
-//import com.qosmiof2.script.QMiner;
-//import com.qosmiof2.script.node.Drop;
-//import com.qosmiof2.script.node.Mine;
+
+import com.qosmiof2.script.QMiner;
+import com.qosmiof2.script.node.Mine;
 
 public enum Ores {
 	Copper(new int [] {436, 437,  11937, 11936, 11960, 11961, 11962,72098, 72099, 72100, 3027, 3229,   11937, 29230, 29231}),
@@ -86,7 +86,6 @@ public enum Ores {
 			frame.setBounds(350, 300, 265, 200);
 			frame.setVisible(true);
 			frame.add(panel);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setResizable(false);
 			
 			
@@ -117,8 +116,11 @@ public enum Ores {
 					selected = (Ores) cb.getSelectedItem();
 					selectedMethod = (Method) cbMethod.getSelectedItem();
 					chosenMethodToUse = selectedMethod.toString();
+					Mine.id = selected.oreID;
 					System.out.println("Chosen ore: " + cb.getSelectedItem().toString());
 					System.out.println("Chosen method: " + cbMethod.getSelectedItem());
+					QMiner.started = true;
+					frame.dispose();
 				}
 				
 			});
